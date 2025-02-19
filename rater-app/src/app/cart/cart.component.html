@@ -1,0 +1,148 @@
+<div class="cart-card" *ngIf="!loading && cart; else loadingOrError">
+    <div class="card-header">
+        <!-- <h3>Named Insured: McDonalds, Policy ID: AC-130-25225</h3> -->
+        <h2>Product: Fixed Site Environmental</h2>
+    </div>
+
+    <h3>Exposure Type: LOCATION [NAICS]</h3>
+    <div class="card-body">
+        <table>
+            <thead>
+                <tr>
+                    <th style="width: 5%">Remove</th>
+                    <th style="width: 5%">No. Of Locations</th>
+                    <th style="width: 30%">Item</th>
+                    <th style="width: 5%">%</th>
+                    <th style="width: 30%">Note</th>
+                    <th>Total</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let item of cart?.items">
+                    <td>
+                        <button class="remove-btn" (click)="removeItem(item.id)">-</button>
+                    </td>
+                    <td>{{item.quantity}}</td>
+                    <td>
+                        <strong>{{ item.naics_code }} - {{ item.product_description }}</strong>
+                        <br>
+                        <span>Premium: ${{ item.naics_premium.toFixed(2) }}</span>
+                    </td>
+                    <td>{{ item.modifier }}%</td>
+                    <td>{{ item.note || 'N/A' }}</td>
+                    <td>${{ item.premium.toFixed(2) }}</td>
+                </tr>
+            </tbody>
+        </table>
+
+
+        <!-- ✅ Show empty row for new item -->
+        <div class="cart-item new-item" *ngIf="newItem">
+            <div>
+                <label for="naicsSelect">Select NAICS Code:</label>
+                <select id="naicsSelect" (change)="selectNaics($event)">
+                    <option value="" disabled selected>Select a NAICS Code</option>
+                    <option *ngFor="let item of naicsCodes" [value]="item.code">
+                        | ${{ item.premium }} | {{ item.code }} - {{ item.description }}
+                    </option>
+                </select>
+            </div>
+
+            <div *ngIf="selectedNaics">
+                <p><strong>Code:</strong> {{ selectedNaics.code }}</p>
+                <p><strong>Description:</strong> {{ selectedNaics.description }}</p>
+                <p><strong>Premium:</strong> {{ selectedNaics.premium | currency }}</p>
+                <p><strong>Quantity:</strong> <input type="number" placeholder="Quantity"
+                        [(ngModel)]="newItem.quantity"></p>
+                <p><strong>Modifier:</strong> <input type="number" placeholder="Modifier"
+                        [(ngModel)]="newItem.modifier"></p>
+                <p><strong>Note:</strong> <input type="text" placeholder="Note" [(ngModel)]="newItem.note"></p>
+                <button class="submit-item-btn" (click)="submitNewItem()">Add</button>
+            </div>
+        </div>
+
+        <!-- ✅ Floating "+" Button to Add New Item -->
+        <button class="add-item-btn" (click)="addNewItemRow()">+</button>
+    </div>
+    <div class="card-footer">
+        <div class="summary">
+            <h3><strong>Total Exposures:</strong> ${{ formattedSubtotal }}</h3>
+        </div>
+    </div>
+
+    <h3>Quantitative/Qualitative Modifiers:</h3>
+    <div class="card-body">
+        <table>
+            <thead>
+                <tr>
+                    <th style="width: 5%">Remove</th>
+                    <th style="width: 25%">Description</th>
+                    <th style="width: 30%">Note</th>
+                    <th style="width: 10%">Modification %</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let item of cart?.mods">
+                    <td>
+                        <button class="remove-btn" (click)="removeMod(item.id)">-</button>
+                    </td>
+                    <td>
+                        <strong>{{item.description}}</strong>
+                        <br>
+                        <span>Modifier: {{item.type}}</span>
+                    </td>
+                    <td>{{ item.note || 'N/A' }}</td>
+                    <td>{{item.factor}}%</td>
+                </tr>
+            </tbody>
+        </table>
+
+
+        <!-- ✅ Show empty row for new item -->
+        <div class="cart-item new-item" *ngIf="newMod">
+            <div>
+                <label for="naicsSelect">Select Modifier:</label>
+                <select id="naicsSelect" (change)="selectMod($event)">
+                    <option value="" disabled selected>Select Modifier</option>
+                    <option *ngFor="let item of modItem" [value]="item.code">
+                        {{ item.type }} | {{ item.description }} - {{ item.factor }}
+                    </option>
+                </select>
+            </div>
+
+            <div *ngIf="selectedMod">
+                <p><strong>Type:</strong> {{ selectedMod.type }}</p>
+                <p><strong>Description:</strong> {{ selectedMod.description }}</p>
+                <p><strong>factor:</strong> {{ selectedMod.factor }}</p>
+                <p><strong>Note:</strong> <input type="text" placeholder="Note" [(ngModel)]="newMod.note"></p>
+                <button class="submit-item-btn" (click)="submitNewMod()">Add</button>
+            </div>
+        </div>
+
+        <!-- ✅ Floating "+" Button to Add New Item -->
+        <button class="add-item-btn" (click)="addNewModRow()">+</button>
+    </div>
+
+    <div class="card-footer">
+        <div class="summary">
+            <h3><strong>Total Modification:</strong> {{ formattedTaxes }}</h3>
+        </div>
+    </div>
+
+
+    <div class="card-footer">
+        <div class="summary">
+            <br>
+            <p class="total"><strong>Base Premium:</strong> ${{ formattedFinalTotal }}</p>
+        </div>
+    </div>
+</div>
+
+<!-- Show Loading or Error Message -->
+<ng-template #loadingOrError>
+    <p *ngIf="loading">Loading cart...</p>
+    <!-- <p *ngIf="errorMessage" class="error">{{ errorMessage }}</p> -->
+
+    <!-- ✅ Create Cart Button -->
+    <button class="create-cart-btn" *ngIf="errorMessage" (click)="createCart()">Create New Cart</button>
+</ng-template>

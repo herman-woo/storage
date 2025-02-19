@@ -1,0 +1,140 @@
+@import '../../styles.sass' // Import global styles
+.create-cart-btn
+  display: block
+  margin: 16px auto
+  padding: 10px 16px
+  background: lighten($secondary-color, 10%) // ✅ Grey button
+  color: #ffffff
+  font-size: 16px
+  font-weight: bold
+  border: none
+  border-radius: 6px
+  cursor: pointer
+  transition: background 0.3s, transform 0.2s
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1)
+
+  &:hover
+    background: darken($secondary-color, 10%) // ✅ Darker grey on hover
+    transform: scale(1.05)
+
+  &:active
+    transform: scale(0.98) // ✅ Click effect
+
+
+.add-item-btn
+  display: flex
+  align-items: center
+  justify-content: center
+  margin-bottom: 30px
+  width: 40px
+  height: 40px
+  background: lighten($secondary-color, 10%) // Soft modern grey
+  color: #fff
+  font-size: 24px
+  font-weight: bold
+  border: none
+  border-radius: 50% // Circular shape
+  cursor: pointer
+  transition: background 0.3s, transform 0.2s, box-shadow 0.3s
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1)
+  position: relative
+  margin: 16px auto 0 // Centers it below the items
+
+  &:hover
+    background: darken($secondary-color, 10%) // Slightly darker grey on hover
+    transform: scale(1.1) // Slight enlarge effect
+    box-shadow: 0px 6px 10px rgba(0, 0, 0, 0.15)
+
+  &:active
+    transform: scale(0.95) // Click press effect
+
+.cart-card
+  width: 1600px
+  margin-top: 30px
+  padding: 16px
+  background: $card-bg
+  border-radius: 12px
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1)
+  transition: transform 0.2s ease-in-out
+
+  .card-header
+    text-align: center
+    font-size: 20px
+    font-weight: bold
+    padding-bottom: 12px
+    border-bottom: 1px solid $border-color
+
+  .card-body
+    padding: 12px 0
+
+    .cart-grid
+        display: grid
+        grid-template-columns: 80px 120px 1.5fr 80px 1fr 120px
+        align-items: center
+        gap: 12px
+        padding: 10px 12px
+        border-bottom: 1px solid lighten($border-color, 10%)
+
+        &:hover
+            background: lighten($border-color, 30%)
+            transform: scale(1.02)
+            box-shadow: 0px 2px 8px rgba(0, 0, 0, 0.1)
+
+    .cart-header
+        font-size: 20px
+        font-weight: bold
+        padding-bottom: 12px
+        border-bottom: 2px solid $border-color
+        text-align: center
+        background: lighten($border-color, 20%)
+
+    .remove-item-btn
+        background: red
+        color: white
+        border: none
+        padding: 6px 12px
+        cursor: pointer
+        font-size: 16px
+        border-radius: 4px
+
+        &:hover
+            background: darken(red, 10%)
+
+    .item-details
+        h3
+            font-size: 16px
+            color: $primary-color
+            transition: color 0.3s
+
+        p
+            font-size: 14px
+            color: $secondary-color
+
+    .item-total
+        p
+            font-size: 16px
+            font-weight: bold
+            color: darken($primary-color, 10%)
+  .card-footer
+    padding-top: 12px
+    border-top: 1px solid $border-color
+
+    .summary
+      display: flex
+      flex-direction: column
+      align-items: flex-end // ✅ Aligns text to the right
+      text-align: right // ✅ Ensures text aligns properly
+      padding-right: 12px // ✅ Adds some spacing from the right edge
+
+      p
+        font-size: 16px
+        transition: color 0.3s
+
+        &.total
+          font-size: 18px
+          color: $highlight-color
+          font-weight: bold
+          transition: color 0.3s
+
+          &:hover
+            color: darken($highlight-color, 10%) // Darker effect when hovering over final total
