@@ -6,8 +6,8 @@ import { Observable } from 'rxjs';
   providedIn: 'root'
 })
 export class NaicsService {
-  private apiUrl = 'http://127.0.0.1:8080/codes'; // FastAPI endpoint
-  private modApi = 'http://127.0.0.1:8080/codes/mods/quantitative'; // FastAPI endpoint
+  private apiUrl = 'http://127.0.0.1:8080/reference/codes'; // FastAPI endpoint
+  private modApi = 'http://127.0.0.1:8080/reference/mods/quantitative'; // FastAPI endpoint
 
   constructor(private http: HttpClient) {}
 

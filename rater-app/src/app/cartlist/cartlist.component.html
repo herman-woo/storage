@@ -1,0 +1,46 @@
+<h1>Rater List</h1>
+<table>
+    <thead>
+        <tr>
+            <th style="width: 5%">Rater ID</th>
+            <th style="width: 5%">Account ID</th>
+            <th style="width: 20%">Business Unit</th>
+            <th style="width: 20%">Product</th>
+            <th style="width: 20%">Named Insured</th>
+            <th style="width: 10%">Subtotal</th>
+            <th style="width: 5%">Modifier</th>
+            <th style="width: 10%">Premium</th>
+            <th style="width: 5%">Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr *ngFor="let rater of raters">
+            <td>{{rater.id}}</td>
+            <td>{{rater.id}}</td>
+            <td>{{rater.business_unit}}</td>
+            <td>{{rater.product}}</td>
+            <td>{{rater.named_insured}}</td>
+            <td>{{rater.subtotal_premium}}</td>
+            <td>{{rater.total_modifiers}}</td>
+            <td>{{rater.final_premium}}</td>
+            <td><button [routerLink]="['/rater/', rater.id]">Open</button></td>
+        </tr>
+    </tbody>
+</table>
+<div class="cart-item new-item" *ngIf="newItem">
+    <!-- <p><strong>Year:</strong> <input type="number" placeholder="Year" [(ngModel)]="newItem.year"></p> -->
+    <!-- <p><strong>Account ID:</strong> <input type="number" placeholder="Account" [(ngModel)]="newItem.account_id"></p> -->
+    <p><strong>Product:</strong>
+        <select [(ngModel)]="newItem.product">
+            <option value="Fixed Site Environmental">Fixed Site Environmental</option>
+            <option value="Contractor or Consultant">Contractor or Consultant</option>
+            <option value="Project Pollution Policy">Project Pollution Policy</option>
+            <option value="Excess">Excess</option>
+        </select>
+    </p>
+    <!-- <p><strong>Business Unit:</strong> <input type="text" placeholder="Business Unit" [(ngModel)]="newItem.business_unit"></p> -->
+    <p><strong>Named Insured:</strong> <input type="text" placeholder="Named Insured"
+            [(ngModel)]="newItem.named_insured"></p>
+    <button class="submit-item-btn" (click)="submitNewItem()">Add</button>
+</div>
+<button class="create-cart-btn" (click)="addNewItemRow()">New Rater</button>

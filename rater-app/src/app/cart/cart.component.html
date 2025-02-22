@@ -1,10 +1,12 @@
 <div class="cart-card" *ngIf="!loading && cart; else loadingOrError">
     <div class="card-header">
         <!-- <h3>Named Insured: McDonalds, Policy ID: AC-130-25225</h3> -->
-        <h2>Product: Fixed Site Environmental</h2>
+        <h2>{{cart.named_insured}}</h2>
     </div>
 
-    <h3>Exposure Type: LOCATION [NAICS]</h3>
+    <h3>Year:{{cart.year}}, Rater ID: {{cart.id}}</h3>
+    <h3>Business Unit: {{cart.business_unit}}</h3>
+    <h3>Product: {{cart.product}}</h3>
     <div class="card-body">
         <table>
             <thead>
@@ -30,7 +32,7 @@
                     </td>
                     <td>{{ item.modifier }}%</td>
                     <td>{{ item.note || 'N/A' }}</td>
-                    <td>${{ item.premium.toFixed(2) }}</td>
+                    <td>${{ item.premium }}</td>
                 </tr>
             </tbody>
         </table>

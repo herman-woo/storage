@@ -1,10 +1,13 @@
 import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
 import { FormsModule } from '@angular/forms'; // ✅ Import FormsModule for ngModel
 import { CartService } from '../services/cart.service';
 import { NaicsService } from '../services/naics.service';
 import { Cart, CartItem, TaxItem } from '../models/cart';
+
+
 @Component({
   selector: 'app-cart',
   standalone: true,
@@ -13,28 +16,32 @@ import { Cart, CartItem, TaxItem } from '../models/cart';
   styleUrls: ['./cart.component.sass'],
   providers: [CartService, NaicsService]
 })
+
 export class CartComponent implements OnInit {
   cart: Cart | null = null;
+  id: string | null = null;
   loading: boolean = true;
   errorMessage: string | null = null;
   naicsCodes: { code: string, description: string, premium: number }[] = [];
-  modItem: { code: string, type:string , description: string, factor: number }[] = [];
+  modItem: { code: string, type: string, description: string, factor: number }[] = [];
   selectedNaics: { code: string, description: string, premium: number } | null = null;
-  selectedMod: { code: string, type:string , description: string, factor: number } | null = null;
+  selectedMod: { code: string, type: string, description: string, factor: number } | null = null;
   // Track new item row
   newItem: CartItem | null = null;
   newMod: TaxItem | null = null;
-  addingItem: boolean = false; // ✅ Track loading state for new item submission
-  addingMod: boolean = false; // ✅ Track loading state for new item submission
+  addingItem: boolean = false;
+  addingMod: boolean = false;
 
-  constructor(private cartService: CartService, private naicsService: NaicsService) { }
+  constructor(private route: ActivatedRoute, private cartService: CartService, private naicsService: NaicsService) { }
 
   ngOnInit(): void {
+    this.id = this.route.snapshot.paramMap.get('id');
     this.loadCart();
+    console.log(this.cart)
   }
 
   loadCart(): void {
-    this.cartService.getCart().subscribe({
+    this.cartService.getCart(parseInt(this.id!)).subscribe({
       next: (data) => {
         this.cart = data;
         this.loading = false;
@@ -59,7 +66,7 @@ export class CartComponent implements OnInit {
         factor: value.factor
       }));
     });
-    
+
   }
   selectNaics(event: Event) {
     const target = event.target as HTMLSelectElement;
@@ -88,16 +95,15 @@ export class CartComponent implements OnInit {
   }
 
   get formattedSubtotal(): string {
-    return (this.cart?.subtotal ?? 0).toFixed(2);
+    return (this.cart?.subtotal_premium ?? 0).toFixed(2);
   }
-
 
   get formattedTaxes(): string {
     return (this.cart?.taxes_total ?? 0).toFixed(2);
   }
 
   get formattedFinalTotal(): string {
-    return (this.cart?.final_total ?? 0).toFixed(2);
+    return (this.cart?.final_premium ?? 0).toFixed(2);
   }
 
   // ✅ Show a new empty row for adding an item
@@ -140,6 +146,7 @@ export class CartComponent implements OnInit {
     this.newItem.premium = (this.newItem.naics_premium * this.newItem.modifier / 100) * this.newItem.quantity
 
     this.cartService.addCartItem(
+      parseInt(this.id!),
       this.newItem.product_description,
       this.newItem.premium,
       this.newItem.quantity,
@@ -160,6 +167,8 @@ export class CartComponent implements OnInit {
       }
     });
   }
+
+  
   submitNewMod(): void {
     if (!this.cart || !this.newMod || this.addingMod) return;
 
@@ -198,7 +207,7 @@ export class CartComponent implements OnInit {
 
     console.log(`Removing item with ID: ${itemId}`);
 
-    this.cartService.deleteCartItem(itemId).subscribe({
+    this.cartService.deleteCartItem(parseInt(this.id!),itemId).subscribe({
       next: () => {
         console.log(`Item ${itemId} removed successfully from backend`);
         this.cart!.items = this.cart!.items.filter(item => item.id !== itemId);
@@ -209,7 +218,7 @@ export class CartComponent implements OnInit {
         this.errorMessage = error.message;
       }
     });
-    
+
   }
 
   removeMod(itemId: number | undefined): void {
@@ -220,7 +229,7 @@ export class CartComponent implements OnInit {
 
     console.log(`Removing item with ID: ${itemId}`);
 
-    this.cartService.deleteModItem(itemId).subscribe({
+    this.cartService.deleteModItem(parseInt(this.id!),itemId).subscribe({
       next: () => {
         console.log(`Item ${itemId} removed successfully from backend`);
         this.cart!.items = this.cart!.items.filter(item => item.id !== itemId);
@@ -231,7 +240,7 @@ export class CartComponent implements OnInit {
         this.errorMessage = error.message;
       }
     });
-    
+
   }
 
 
