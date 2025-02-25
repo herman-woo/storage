@@ -26,6 +26,7 @@ export interface Cart {
     final_total?: number;
     items: CartItem[];
     mods: TaxItem[];
+    options: any[];
     business_unit: string;
     business_unit_id: number;
     year: number,

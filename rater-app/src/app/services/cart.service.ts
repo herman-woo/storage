@@ -59,9 +59,14 @@ export class CartService {
       })
     );
   }
-  addModItem(description: string,factor: number,note: string, type: string): Observable<TaxItem> {
-    const apiUrl = 'http://127.0.0.1:8080/cart/1/add-mod';
-    const body = {description, factor, note, type};
+  addModItem(rater_id: number,
+    description: string,
+    factor: number,
+    note: string, 
+    type: string): Observable<TaxItem> {
+    
+    const apiUrl = `http://127.0.0.1:8080/rater/${rater_id}/credit`;
+    const body = {rater_id,description, factor, note, type};
     console.log("POSTING: ",body)
     return this.http.post<TaxItem>(apiUrl, body).pipe(
       catchError(error => {
@@ -71,7 +76,7 @@ export class CartService {
     );
   }
   deleteModItem(rater_id: number,itemId: number): Observable<void> {
-    const apiUrl = `http://127.0.0.1:8080/rater/${rater_id}/exposure/${itemId}`;
+    const apiUrl = `http://127.0.0.1:8080/rater/${rater_id}/credit/${itemId}`;
     return this.http.delete<void>(apiUrl).pipe(
       catchError(error => {
         console.error('Error deleting item:', error);

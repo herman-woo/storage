@@ -18,6 +18,8 @@ import { Cart, CartItem, TaxItem } from '../models/cart';
 })
 
 export class CartComponent implements OnInit {
+  options: any[] | null = [];
+  
   cart: Cart | null = null;
   id: string | null = null;
   loading: boolean = true;
@@ -37,7 +39,6 @@ export class CartComponent implements OnInit {
   ngOnInit(): void {
     this.id = this.route.snapshot.paramMap.get('id');
     this.loadCart();
-    console.log(this.cart)
   }
 
   loadCart(): void {
@@ -45,6 +46,7 @@ export class CartComponent implements OnInit {
       next: (data) => {
         this.cart = data;
         this.loading = false;
+        this.options = this.cart.options
       },
       error: (error) => {
         this.errorMessage = error.message;
@@ -99,7 +101,7 @@ export class CartComponent implements OnInit {
   }
 
   get formattedTaxes(): string {
-    return (this.cart?.taxes_total ?? 0).toFixed(2);
+    return (this.cart?.total_modifiers ?? 0).toFixed(2);
   }
 
   get formattedFinalTotal(): string {
@@ -171,12 +173,13 @@ export class CartComponent implements OnInit {
   
   submitNewMod(): void {
     if (!this.cart || !this.newMod || this.addingMod) return;
-
+    console.log("stop this mess")
     this.addingMod = true; // ✅ Prevent duplicate submissions
     this.newMod.description = this.selectedMod!.description;
     this.newMod.factor = this.selectedMod!.factor;
     this.newMod.type = this.selectedMod!.type;
     this.cartService.addModItem(
+      parseInt(this.id!),
       this.newMod.description,
       this.newMod.factor,
       this.newMod.note,

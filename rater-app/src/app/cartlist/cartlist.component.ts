@@ -51,7 +51,8 @@ export class CartlistComponent {
       named_insured: "",
       named_insured_id: 1,
       items: [],
-      mods: []
+      mods: [],
+      options: []
     };
     console.log(this.newItem)
   }

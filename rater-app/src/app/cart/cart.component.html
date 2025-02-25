@@ -1,3 +1,4 @@
+<!-- card for Exposures and Credits -->
 <div class="cart-card" *ngIf="!loading && cart; else loadingOrError">
     <div class="card-header">
         <!-- <h3>Named Insured: McDonalds, Policy ID: AC-130-25225</h3> -->
@@ -72,7 +73,7 @@
         </div>
     </div>
 
-    <h3>Quantitative/Qualitative Modifiers:</h3>
+    <h3>Credits</h3>
     <div class="card-body">
         <table>
             <thead>
@@ -137,6 +138,117 @@
             <br>
             <p class="total"><strong>Base Premium:</strong> ${{ formattedFinalTotal }}</p>
         </div>
+    </div>
+</div>
+
+<!-- card for Options -->
+<div class="cart-card" *ngIf="!loading && cart; else loadingOrError">
+    <h3>Quote Options:</h3>
+    <div class="card-body">
+        <!-- <table>
+            <thead>
+                <tr>
+                    <th style="width: 5%">Remove</th>
+                    <th style="width: 10%">Per Limit</th>
+                    <th style="width: 10%">Total Limit</th>
+                    <th style="width: 10%">SIR</th>
+                    <th style="width: 5%">Terms</th>
+                    <th style="width: 5%">Premium</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let item of cart?.items">
+                    <td>
+                        <button class="remove-btn" (click)="removeItem(item.id)">-</button>
+                    </td>
+                    <td>{{item.quantity}}</td>
+                    <td>
+                        <strong>{{ item.naics_code }} - {{ item.product_description }}</strong>
+                        <br>
+                        <span>Premium: ${{ item.naics_premium.toFixed(2) }}</span>
+                    </td>
+                    <td>{{ item.modifier }}%</td>
+                    <td>{{ item.note || 'N/A' }}</td>
+                    <td>${{ item.premium }}</td>
+                </tr>
+            </tbody>
+        </table> -->
+
+        <!-- <div class="option-header">
+            <div>
+                <div class="option-header">Total Limit</div>
+                <div *ngFor="let option of options">{{ option.total_limit }}</div>
+            </div>
+            <div>
+                <div>Per Limit</div>
+                <div *ngFor="let option of options">{{ option.per_limit }}</div>
+            </div>
+            <div>
+                <div>Retention</div>
+                <div *ngFor="let option of options">{{ option.retention }}</div>
+            </div>
+            <div>
+                <div>Terms</div>
+                <div *ngFor="let option of options">{{ option.terms }}</div>
+            </div>
+            <div>
+                <div>Total Premium</div>
+                <div *ngFor="let option of options">{{ option.total_premium }}</div>
+            </div>
+        </div> -->
+        <!-- The good version -->
+        <div class="options-table">
+            <table>
+                <tr>
+                    <th class="option-header">Total Limit</th>
+                    <td *ngFor="let option of options">{{ option.total_limit }}</td>
+                </tr>
+                <tr>
+                    <th>Per Limit</th>
+                    <td *ngFor="let option of options">{{ option.per_limit }}</td>
+                </tr>
+                <tr>
+                    <th>SIR</th>
+                    <td *ngFor="let option of options">{{ option.retention }}</td>
+                </tr>
+                <tr>
+                    <th>Terms</th>
+                    <td *ngFor="let option of options">{{ option.terms }}</td>
+                </tr>
+                <tr>
+                    <th>Total Premium</th>
+                    <td *ngFor="let option of options"><strong>{{ option.total_premium }}</strong> </td>
+                </tr>
+            </table>
+        </div>
+
+        <!-- ✅ Show empty row for new item -->
+        <div class="cart-item new-item" *ngIf="newItem">
+            <div>
+                <label for="naicsSelect">Select NAICS Code:</label>
+                <select id="naicsSelect" (change)="selectNaics($event)">
+                    <option value="" disabled selected>Select a NAICS Code</option>
+                    <option *ngFor="let item of naicsCodes" [value]="item.code">
+                        | ${{ item.premium }} | {{ item.code }} - {{ item.description }}
+                    </option>
+                </select>
+            </div>
+
+            <div *ngIf="selectedNaics">
+                <p><strong>Code:</strong> {{ selectedNaics.code }}</p>
+                <p><strong>Description:</strong> {{ selectedNaics.description }}</p>
+                <p><strong>Premium:</strong> {{ selectedNaics.premium | currency }}</p>
+                <p><strong>Quantity:</strong> <input type="number" placeholder="Quantity"
+                        [(ngModel)]="newItem.quantity"></p>
+                <p><strong>Modifier:</strong> <input type="number" placeholder="Modifier"
+                        [(ngModel)]="newItem.modifier"></p>
+                <p><strong>Note:</strong> <input type="text" placeholder="Note" [(ngModel)]="newItem.note"></p>
+                <button class="submit-item-btn" (click)="submitNewItem()">Add</button>
+            </div>
+        </div>
+
+        <!-- ✅ Floating "+" Button to Add New Item -->
+        <button class="add-item-btn" (click)="addNewItemRow()">+</button>
     </div>
 </div>
 
