@@ -22,6 +22,7 @@ export class CartService {
       })
     );
   }
+
   getCart(raterId: number): Observable<Cart> {
     return this.http.get<Cart>(`${this.apiUrl}/${raterId}`).pipe(
       catchError(error => {
@@ -50,7 +51,7 @@ export class CartService {
     );
   }
 
-  deleteCartItem(rater_id:number, itemId: number): Observable<void> {
+  deleteCartItem(rater_id: number, itemId: number): Observable<void> {
     const apiUrl = `http://127.0.0.1:8080/rater/${rater_id}/exposure/${itemId}`;
     return this.http.delete<void>(apiUrl).pipe(
       catchError(error => {
@@ -62,12 +63,12 @@ export class CartService {
   addModItem(rater_id: number,
     description: string,
     factor: number,
-    note: string, 
+    note: string,
     type: string): Observable<TaxItem> {
-    
+
     const apiUrl = `http://127.0.0.1:8080/rater/${rater_id}/credit`;
-    const body = {rater_id,description, factor, note, type};
-    console.log("POSTING: ",body)
+    const body = { rater_id, description, factor, note, type };
+    console.log("POSTING: ", body)
     return this.http.post<TaxItem>(apiUrl, body).pipe(
       catchError(error => {
         console.error('Error adding item:', error);
@@ -75,7 +76,7 @@ export class CartService {
       })
     );
   }
-  deleteModItem(rater_id: number,itemId: number): Observable<void> {
+  deleteModItem(rater_id: number, itemId: number): Observable<void> {
     const apiUrl = `http://127.0.0.1:8080/rater/${rater_id}/credit/${itemId}`;
     return this.http.delete<void>(apiUrl).pipe(
       catchError(error => {
@@ -85,7 +86,7 @@ export class CartService {
     );
   }
 
-  getAllRaters(): Observable<Cart[]>  {
+  getAllRaters(): Observable<Cart[]> {
     return this.http.get<Cart[]>(`${this.apiUrl}`)
   }
 
@@ -102,21 +103,49 @@ export class CartService {
     const apiUrl = 'http://127.0.0.1:8080/rater';
     // const body = { product_description, premium, quantity, naics_premium, note, naics_code, modifier };
     const body = {
-      year ,
-      account_id ,
+      year,
+      account_id,
       business_unit_id,
       product,
-      product_id ,
-      named_insured ,
-      named_insured_id ,
+      product_id,
+      named_insured,
+      named_insured_id,
       business_unit
     }
 
     // return this.http.post<Cart>(apiUrl, body).pipe(
-    return this.http.post<Cart>(apiUrl,body).pipe(
+    return this.http.post<Cart>(apiUrl, body).pipe(
       catchError(error => {
         console.error('Error adding item:', error);
         return throwError(() => new Error('Failed to add item to cart'));
+      })
+    );
+  }
+
+  addOption(
+    rater_id: number | undefined,
+    per_limit: number,
+    total_limit: number,
+    retention: number,
+    terms: number,
+    total_premium: number | undefined,) {
+    const apiUrl = `http://127.0.0.1:8080/rater/${rater_id}/option`;
+    const body = { rater_id, per_limit, total_limit, retention, terms, total_premium };
+    console.log("POSTING: ", body)
+    return this.http.post<any>(apiUrl, body).pipe(
+      catchError(error => {
+        console.error('Error adding item:', error);
+        return throwError(() => new Error('Failed to add item to cart'));
+      })
+    );
+  }
+
+  deleteOptionItem(rater_id: number, itemId: number): Observable<void> {
+    const apiUrl = `http://127.0.0.1:8080/rater/${rater_id}/option/${itemId}`;
+    return this.http.delete<void>(apiUrl).pipe(
+      catchError(error => {
+        console.error('Error deleting item:', error);
+        return throwError(() => new Error('Failed to delete item'));
       })
     );
   }

@@ -1,9 +1,9 @@
 from fastapi import FastAPI
 from contextlib import asynccontextmanager
 from db import create_db_and_tables, SessionDep
-from domains.checkout.routes import router as cart_router
-from domains.checkout.models import Cart
-from domains.checkout.repository import CartRepository
+from domains.rater.routes import router as cart_router
+from domains.rater.models import Rater
+from domains.rater.repository import CartRepository
 from domains.location_exposure.routes import router as code_router
 
 from fastapi.middleware.cors import CORSMiddleware

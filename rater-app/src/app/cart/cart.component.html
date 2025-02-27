@@ -95,7 +95,7 @@
                         <span>Modifier: {{item.type}}</span>
                     </td>
                     <td>{{ item.note || 'N/A' }}</td>
-                    <td>{{item.factor}}%</td>
+                    <td>{{item.factor| formatNumber }}%</td>
                 </tr>
             </tbody>
         </table>
@@ -136,119 +136,128 @@
     <div class="card-footer">
         <div class="summary">
             <br>
+            <!-- <p class="total"><strong>Base Premium:</strong> ${{ formattedFinalTotal }}</p> -->
+
             <p class="total"><strong>Base Premium:</strong> ${{ formattedFinalTotal }}</p>
         </div>
     </div>
 </div>
 
-<!-- card for Options -->
-<div class="cart-card" *ngIf="!loading && cart; else loadingOrError">
-    <h3>Quote Options:</h3>
+<div class="cart-card" *ngIf="!loading && cart && verticalOptions; else loadingOrError">
+    <div>
+        <h3>Quote Options:</h3>
+        <button (click)="changeVerticalOptions()">Change display</button>
+    </div>
     <div class="card-body">
-        <!-- <table>
+        <table>
             <thead>
                 <tr>
-                    <th style="width: 5%">Remove</th>
-                    <th style="width: 10%">Per Limit</th>
-                    <th style="width: 10%">Total Limit</th>
-                    <th style="width: 10%">SIR</th>
-                    <th style="width: 5%">Terms</th>
-                    <th style="width: 5%">Premium</th>
+                    <th style="width: 10%">Actions</th>
+                    <th style="width: 20%">Per Limit</th>
+                    <th style="width: 20%">Total Limit</th>
+                    <th style="width: 20%">SIR</th>
+                    <th style="width: 10%">Terms</th>
+                    <th style="width: 20%">Total Premium <button (click)="sortBy()">sort</button></th>
                 </tr>
             </thead>
             <tbody>
-                <tr *ngFor="let item of cart?.items">
+                <tr *ngFor="let item of cart?.options; trackBy: trackByFn">
                     <td>
-                        <button class="remove-btn" (click)="removeItem(item.id)">-</button>
+                        <button class="remove-btn" (click)="removeOption(item.id)">-</button>
+                        <button class="" (click)="copyValues(item)">Copy</button>
                     </td>
-                    <td>{{item.quantity}}</td>
-                    <td>
-                        <strong>{{ item.naics_code }} - {{ item.product_description }}</strong>
-                        <br>
-                        <span>Premium: ${{ item.naics_premium.toFixed(2) }}</span>
-                    </td>
-                    <td>{{ item.modifier }}%</td>
-                    <td>{{ item.note || 'N/A' }}</td>
-                    <td>${{ item.premium }}</td>
+                    <td>${{item.per_limit| formatNumber }}</td>
+                    <td>${{item.total_limit| formatNumber }}</td>
+                    <td>${{item.retention| formatNumber }}</td>
+                    <td>{{item.terms}} term(s)</td>
+                    <td><strong>${{item.total_premium| formatNumber }}</strong></td>
                 </tr>
-            </tbody>
-        </table> -->
+                <tr>
+                    <td>
+                        <button class="add-item-btn" (click)="addNewOption()">+</button>
+                    </td>
+                    <td>
+                        <p><input type="text" placeholder="Term" [(ngModel)]="perLimit"
+                                (ngModelChange)="updateTotalPremium()"></p>
+                        <button (click)="increasePerLimit(500000)">add 500k limit</button>
+                        <button (click)="increasePerLimit(-500000)">sub 500k limit</button>
 
-        <!-- <div class="option-header">
-            <div>
-                <div class="option-header">Total Limit</div>
-                <div *ngFor="let option of options">{{ option.total_limit }}</div>
-            </div>
-            <div>
-                <div>Per Limit</div>
-                <div *ngFor="let option of options">{{ option.per_limit }}</div>
-            </div>
-            <div>
-                <div>Retention</div>
-                <div *ngFor="let option of options">{{ option.retention }}</div>
-            </div>
-            <div>
-                <div>Terms</div>
-                <div *ngFor="let option of options">{{ option.terms }}</div>
-            </div>
-            <div>
-                <div>Total Premium</div>
-                <div *ngFor="let option of options">{{ option.total_premium }}</div>
-            </div>
-        </div> -->
+                    </td>
+                    <td>
+                        <p><input type="text" placeholder="Term" [(ngModel)]="totalLimit"
+                                (ngModelChange)="updateTotalPremium()"></p>
+                        <button (click)="increaseTotalLimit(500000)">add 500k limit</button>                        
+                        <button (click)="increaseTotalLimit(-500000)">sub 500k limit</button>
+                    </td>
+                    <td>
+                        <p><input type="text" placeholder="Term" [(ngModel)]="sir"
+                                (ngModelChange)="updateTotalPremium()"></p>
+                            <button (click)="increaseRetention25k(25000)">add 25k retention</button>
+                            <button (click)="increaseRetention25k(-25000)">sub 25k retention</button>
+                    </td>
+                    <td>
+                        <p><input type="text" placeholder="Term" [(ngModel)]="terms"
+                                (ngModelChange)="updateTotalPremium()"></p>
+                                <button (click)="increaseTerms(2)">add 2 terms</button>
+                                <button (click)="increaseTerms(-2)">sub 2 terms</button>
+                    </td>
+                    <td>${{totalPremium! | formatNumber }}</td>
+                </tr>
+        </table>
+    </div>
+</div>
+<!-- card for Options -->
+<div class="cart-card" *ngIf="!loading && cart && !verticalOptions; else loadingOrError">
+    <h3>Quote Options:</h3>
+    <button (click)="changeVerticalOptions()">Change display</button>
+    <div class="card-body">
         <!-- The good version -->
         <div class="options-table">
             <table>
                 <tr>
-                    <th class="option-header">Total Limit</th>
-                    <td *ngFor="let option of options">{{ option.total_limit }}</td>
+                    <th>Actions:</th>
+                    <td *ngFor="let option of options">
+                        <button>Remove</button>
+                        <button>Edit</button>
+                        <!-- <button class="remove-btn" (click)="removeItem(item.id)">-</button> -->
+                    </td>
+                    <td>
+                        <button class="add-item-btn" (click)="addNewOption()">+</button>
+                        <!-- <button class="remove-btn" (click)="removeItem(item.id)">-</button> -->
+                    </td>
                 </tr>
                 <tr>
                     <th>Per Limit</th>
-                    <td *ngFor="let option of options">{{ option.per_limit }}</td>
+                    <td *ngFor="let option of options">${{ option.per_limit| formatNumber }}</td>
+                    <p><input type="text" placeholder="Per Limit" [(ngModel)]="perLimit"
+                            (ngModelChange)="updateTotalPremium()"></p>
+                </tr>
+                <tr>
+                    <th class="option-header">Total Limit</th>
+                    <td *ngFor="let option of options">${{ option.total_limit | formatNumber }}</td>
+                    <p><input type="text" placeholder="totalLimit" [(ngModel)]="totalLimit"
+                            (ngModelChange)="updateTotalPremium()"></p>
+                    <!-- <p><strong>Note:</strong> <input type="text" placeholder="Note" [(ngModel)]="newMod.note"></p> -->
                 </tr>
                 <tr>
                     <th>SIR</th>
-                    <td *ngFor="let option of options">{{ option.retention }}</td>
+                    <td *ngFor="let option of options">${{ option.retention | formatNumber }}</td>
+                    <p><input type="text" placeholder="SIR" [(ngModel)]="sir" (ngModelChange)="updateTotalPremium()">
+                    </p>
                 </tr>
                 <tr>
                     <th>Terms</th>
-                    <td *ngFor="let option of options">{{ option.terms }}</td>
+                    <td *ngFor="let option of options">${{ option.terms | formatNumber }}</td>
+                    <p><input type="text" placeholder="Term" [(ngModel)]="terms"
+                            (ngModelChange)="updateTotalPremium()"></p>
                 </tr>
                 <tr>
                     <th>Total Premium</th>
-                    <td *ngFor="let option of options"><strong>{{ option.total_premium }}</strong> </td>
+                    <td *ngFor="let option of options"><strong>${{ option.total_premium | formatNumber }}</strong> </td>
+                    <p>{{totalPremium}}</p>
                 </tr>
             </table>
         </div>
-
-        <!-- ✅ Show empty row for new item -->
-        <div class="cart-item new-item" *ngIf="newItem">
-            <div>
-                <label for="naicsSelect">Select NAICS Code:</label>
-                <select id="naicsSelect" (change)="selectNaics($event)">
-                    <option value="" disabled selected>Select a NAICS Code</option>
-                    <option *ngFor="let item of naicsCodes" [value]="item.code">
-                        | ${{ item.premium }} | {{ item.code }} - {{ item.description }}
-                    </option>
-                </select>
-            </div>
-
-            <div *ngIf="selectedNaics">
-                <p><strong>Code:</strong> {{ selectedNaics.code }}</p>
-                <p><strong>Description:</strong> {{ selectedNaics.description }}</p>
-                <p><strong>Premium:</strong> {{ selectedNaics.premium | currency }}</p>
-                <p><strong>Quantity:</strong> <input type="number" placeholder="Quantity"
-                        [(ngModel)]="newItem.quantity"></p>
-                <p><strong>Modifier:</strong> <input type="number" placeholder="Modifier"
-                        [(ngModel)]="newItem.modifier"></p>
-                <p><strong>Note:</strong> <input type="text" placeholder="Note" [(ngModel)]="newItem.note"></p>
-                <button class="submit-item-btn" (click)="submitNewItem()">Add</button>
-            </div>
-        </div>
-
-        <!-- ✅ Floating "+" Button to Add New Item -->
-        <button class="add-item-btn" (click)="addNewItemRow()">+</button>
     </div>
 </div>
 

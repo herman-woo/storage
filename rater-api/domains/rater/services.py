@@ -1,8 +1,8 @@
 from sqlalchemy.orm import Session
-from .models import Cart, CartItem
+from .models import Rater, Exposure
 import math
 
-def calculate_cart_totals(cart: Cart):
+def calculate_cart_totals(cart: Rater):
     """ Recalculates subtotal, tax, and final total for a cart. """
     subtotal = sum(item.premium for item in cart.items)
 
@@ -19,11 +19,11 @@ def calculate_cart_totals(cart: Cart):
 
 def add_item_to_cart(db: Session, cart_id: int, item_data: dict):
     """ Adds an item to the cart and updates totals. """
-    cart = db.get(Cart, cart_id)
+    cart = db.get(Rater, cart_id)
     if not cart:
         raise ValueError("Cart not found.")
 
-    new_item = CartItem(cart_id=cart_id, **item_data)
+    new_item = Exposure(cart_id=cart_id, **item_data)
     db.add(new_item)
     db.commit()
     db.refresh(cart)

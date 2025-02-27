@@ -5,4 +5,6 @@ import { CartlistComponent } from './cartlist/cartlist.component';
 export const routes: Routes = [
     { path: 'rater/all', component: CartlistComponent },
     { path: 'rater/:id', component: CartComponent },
+    { path: 'rater/:id/coverage', component: CartComponent },
+    { path: 'rater/:id/options', component: CartComponent },
 ];

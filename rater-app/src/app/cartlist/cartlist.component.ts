@@ -3,6 +3,8 @@ import { CartService } from '../services/cart.service';
 import { CommonModule } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
 import { RouterModule, Router } from '@angular/router';
+import { FormatNumberPipe } from '../cart/pipe';
+
 
 import { FormsModule } from '@angular/forms'; // ✅ Import FormsModule for ngModel
 // import { NaicsService } from '../services/naics.service';
@@ -12,7 +14,7 @@ import { Cart } from '../models/cart';
 @Component({
   selector: 'app-cartlist',
   standalone: true,
-  imports: [CommonModule, HttpClientModule, FormsModule, RouterModule], // ✅ Add FormsModule
+  imports: [CommonModule, HttpClientModule, FormsModule, RouterModule, FormatNumberPipe], // ✅ Add FormsModule
   templateUrl: './cartlist.component.html',
   styleUrl: './cartlist.component.sass',
   providers: [CartService]

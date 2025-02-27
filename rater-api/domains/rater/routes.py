@@ -1,6 +1,6 @@
 from fastapi import APIRouter, Depends, HTTPException
 from sqlmodel import Session
-from .models import Cart, CartItem, Tax
+from .models import Rater, Exposure, Modifier
 from .services import calculate_cart_totals
 from .repository import CartRepository
 from db import SessionDep  # Import the session dependency
@@ -11,7 +11,7 @@ router = APIRouter(prefix="", tags=["Cart"])
 def create_cart(db: SessionDep):
     """Create a new shopping cart."""
     cart_repo = CartRepository(db)
-    cart = Cart()  # Create an empty cart
+    cart = Rater()  # Create an empty cart
     saved_cart = cart_repo.save(cart)
     return {"message": "Cart created", "cart_id": saved_cart.id}
 
@@ -56,16 +56,16 @@ def get_cart(cart_id: int, db: SessionDep):
         ]
     }
 
-@router.post("/{cart_id}/add-item")
-def add_item(cart_id: int, item_data: dict, db: SessionDep):
+@router.post("/{rater_id}/add-item")
+def add_item(rater_id: int, item_data: dict, db: SessionDep):
     """Add an item to a cart and recalculate totals."""
     cart_repo = CartRepository(db)
-    cart = cart_repo.find_by_id(cart_id)
+    cart = cart_repo.find_by_id(rater_id)
     if not cart:
         raise HTTPException(status_code=404, detail="Cart not found")
 
     # Create CartItem from request data
-    new_item = CartItem(cart_id=cart_id, **item_data)
+    new_item = Exposure(rater_id=rater_id, **item_data)
     db.add(new_item)
     db.commit()
     db.refresh(cart)
@@ -87,7 +87,7 @@ def add_item(cart_id: int, tax_data: dict, db: SessionDep):
 
     # Create Tax from request data
     print("HERERER")
-    new_item = Tax(cart_id=cart_id, **tax_data)
+    new_item = Modifier(cart_id=cart_id, **tax_data)
     db.add(new_item)
     db.commit()
     db.refresh(cart)
